@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_main_ms"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:elevation="@dimen/elevation_medium"
+        app:titleTextAppearance="@style/ToolbarTitleText"
+        android:theme="@style/AppTheme.AppBarOverlay">
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map_fragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".DevicePosition"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/track_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="64dp"
+            app:backgroundTint="@color/amber_700"
+            app:tint="@color/accent"
+            app:srcCompat="@drawable/baseline_map_24_white" />
+    </FrameLayout>
+</RelativeLayout>

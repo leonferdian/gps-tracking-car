@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="JotFormDark">#0A1551</color>
+    <color name="JotFormYellow">#FFB21D</color>
+    <color name="JotFormOrange">#FF6100</color>
+    <color name="JotFormGrass">#7EC10E</color>
+
+    <color name="list_divider">#d9d9d9</color>
+    <color name="list_row_start_color">#ffffff</color>
+    <color name="list_row_end_color">#ffffff</color>
+    <color name="list_row_hover_start_color">#ebeef0</color>
+    <color name="list_row_hover_end_color">#ebeef0</color>
+    <color name="holo_blue_light">#ff33b5e5</color>
+
+    <color name="primary">#E43F3F</color>
+    <color name="primary_dark">#E12929</color>
+    <color name="primary_darker">#CC1D1D</color>
+    <color name="accent">#FFFFFF</color>
+
+    <color name="jet">#222222</color>
+    <color name="oil">#333333</color>
+    <color name="monsoon">#777777</color>
+    <color name="jumbo">#888888</color>
+    <color name="aluminum">#999999</color>
+    <color name="base">#AAAAAA</color>
+    <color name="iron">#CCCCCC</color>
+    <color name="lightgray">#ededed</color>
+    <color name="pink_color">#f24df8</color>
+    <color name="blue_color">#1386ea</color>
+    <color name="yellow_color">#e9b211</color>
+    <color name="green_color">#2ecc71</color>
+    <color name="maroon">#ff3333</color>
+    <color name="black_purple">#333366</color>
+    <color name="pure_purple">#9966cc</color>
+    <color name="red_purple">#cc3399</color>
+    <color name="blue_black">#0c374d</color>
+    <color name="cream">#FFAB91</color>
+    <color name="orange">#FF7043</color>
+
+    <!-- For Slider Page-->
+    <!-- Screens background color-->
+    <color name="bg_screen1">#800000</color>
+    <color name="bg_screen2">#006400</color>
+    <color name="bg_screen3">#008B8B</color>
+    <color name="bg_screen4">#8A2BE2</color>
+    <color name="lingkarHijau">#009900</color>
+
+    <!-- For Page Color -->
+    <color name="page_green">#02ce29</color>
+    <color name="page_orange">#ff6633</color>
+    <color name="page_main_sales">#ff3333</color>
+    <color name="page_cust_service">#336666</color>
+    <color name="page_join_visit">#9966cc</color>
+    <color name="page_point">#cc3399</color>
+    <color name="page_all_menu">#030303</color>
+    <color name="page_making_order">#dd9614</color>
+    <color name="page_tbl_total">#09b2bb</color>
+    <color name="page_red">#ff3366</color>
+
+    <color name="windowBackgroundDark">#E9EBEE</color>
+    <color name="primary_text">#6a6c6f</color>
+    <color name="black_transparent">#8C000000</color>
+
+    <!-- for cart -->
+    <color name="background">#323232</color>
+    <color name="holo_green_dark">#ff669900</color>
+    <color name="qty_product">#de1f59</color>
+
+
+    <color name="primary_back">#80E7494A</color>
+    <color name="grey_light">#E0E0E0</color>
+
+    <!-- for timeline -->
+    <color name="colorLine">#8b9cab</color>
+
+    <color name="soft_grey">#e5e5e5</color>
+
+    <!-- for padma drill -->
+    <color name="colortokotutup">#de1f89</color>
+    <color name="colorterkunjungi">#3fc60e</color>
+    <color name="colortidakterkunjungi">#CCCC00</color>
+    <color name="colorjenisitem">#e42710</color>
+
+    <!-- for program -->
+    <color name="boxdepanAtas">#cc3333</color>
+    <color name="org_menu_kendaraan">#e86f29</color>
+    <color name="menu_brg">#e99f17</color>
+    <color name="menu_audit_kar">#ccb40f</color>
+
+    <color name="vol_realisasi">#33cc66</color>
+    <color name="vol_gap">#ff3333</color>
+    <color name="vol_yel">#ffcc00</color>
+
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#A9A9A9</color>
+    <color name="dot_light_screen2">#A9A9A9</color>
+    <color name="dot_light_screen3">#A9A9A9</color>
+    <color name="dot_light_screen4">#A9A9A9</color>
+
+    <!-- for upload video -->
+    <color name="view_background">#e8ecfa</color>
+    <color name="btn_bg">#277bec</color>
+    <color name="txt_font">#4e5572</color>
+    <color name="action_bar">#1f2649</color>
+
+    <color name="grey_3">#f7f7f7</color>
+    <color name="grey_5">#f2f2f2</color>
+    <color name="grey_10">#e6e6e6</color>
+    <color name="grey_20">#cccccc</color>
+    <color name="grey_40">#999999</color>
+    <color name="grey_60">#666666</color>
+    <color name="grey_80">#37474F</color>
+    <color name="grey_90">#263238</color>
+    <color name="grey_95">#1a1a1a</color>
+    <color name="grey_100_">#0d0d0d</color>
+
+    <color name="light_blue_400">#29B6F6</color>
+
+    <color name="blue_grey_50">#ECEFF1</color>
+    <color name="blue_grey_100">#CFD8DC</color>
+    <color name="blue_grey_200">#B0BEC5</color>
+    <color name="blue_grey_300">#90A4AE</color>
+    <color name="blue_grey_400">#78909C</color>
+    <color name="blue_grey_500">#607D8B</color>
+    <color name="blue_grey_600">#546E7A</color>
+    <color name="blue_grey_700">#455A64</color>
+    <color name="blue_grey_800">#37474F</color>
+    <color name="blue_grey_900">#263238</color>
+    <color name="blue_grey_800_overlay">#E637474F</color>
+
+    <color name="light_green_50">#F1F8E9</color>
+    <color name="light_green_100">#DCEDC8</color>
+    <color name="light_green_200">#C5E1A5</color>
+    <color name="light_green_300">#AED581</color>
+    <color name="light_green_400">#9CCC65</color>
+    <color name="light_green_500">#8BC34A</color>
+    <color name="light_green_600">#7CB342</color>
+    <color name="light_green_700">#689F38</color>
+    <color name="light_green_800">#558B2F</color>
+    <color name="light_green_900">#33691E</color>
+    <color name="light_green_A100">#CCFF90</color>
+    <color name="light_green_A200">#B2FF59</color>
+    <color name="light_green_A400">#76FF03</color>
+    <color name="light_green_A700">#64DD17</color>
+
+    <color name="overlay_light_10">#1AFFFFFF</color>
+    <color name="overlay_light_20">#33FFFFFF</color>
+    <color name="overlay_light_30">#4DFFFFFF</color>
+    <color name="overlay_light_40">#66FFFFFF</color>
+    <color name="overlay_light_50">#8FFFFFF0</color>
+    <color name="overlay_light_60">#99FFFFFF</color>
+    <color name="overlay_light_70">#B3FFFFFF</color>
+    <color name="overlay_light_80">#CCFFFFFF</color>
+    <color name="overlay_light_90">#E6FFFFFF</color>
+
+    <color name="teal_50">#E0F2F1</color>
+    <color name="teal_100">#B2DFDB</color>
+    <color name="teal_300">#4DB6AC</color>
+    <color name="teal_400">#26A69A</color>
+    <color name="teal_500">#009688</color>
+    <color name="teal_600">#00897B</color>
+    <color name="teal_800">#00695C</color>
+    <color name="teal_900">#004D40</color>
+    <color name="teal_A100">#A7FFEB</color>
+    <color name="teal_A200">#64FFDA</color>
+    <color name="teal_A400">#1DE9B6</color>
+    <color name="teal_A700">#00BFA5</color>
+
+    <color name="cyan_50">#E0F7FA</color>
+    <color name="cyan_100">#B2EBF2</color>
+    <color name="cyan_200">#80DEEA</color>
+    <color name="cyan_300">#4DD0E1</color>
+    <color name="cyan_400">#26C6DA</color>
+    <color name="cyan_500">#00BCD4</color>
+    <color name="cyan_600">#00ACC1</color>
+    <color name="cyan_700">#0097A7</color>
+    <color name="cyan_800">#00838F</color>
+    <color name="cyan_900">#006064</color>
+    <color name="cyan_A100">#84FFFF</color>
+    <color name="cyan_A200">#18FFFF</color>
+    <color name="cyan_A400">#00E5FF</color>
+    <color name="cyan_A700">#00B8D4</color>
+    <color name="cyan_800_overlay">#E600838F</color>
+
+    <color name="amber_50">#FFF8E1</color>
+    <color name="amber_100">#FFECB3</color>
+    <color name="amber_200">#FFE082</color>
+    <color name="amber_300">#FFD54F</color>
+    <color name="amber_400">#FFCA28</color>
+    <color name="amber_500">#FFC107</color>
+    <color name="amber_600">#FFB300</color>
+    <color name="amber_700">#FFA000</color>
+    <color name="amber_800">#FF8F00</color>
+    <color name="amber_900">#FF6F00</color>
+    <color name="amber_A100">#FFE57F</color>
+    <color name="amber_A200">#FFD740</color>
+    <color name="amber_A400">#FFC400</color>
+    <color name="amber_A700">#FFAB00</color>
+
+    <color name="colorAccentDark">#F50057</color>
+
+    <color name="deep_orange_50">#FBE9E7</color>
+    <color name="deep_orange_100">#FFCCBC</color>
+    <color name="deep_orange_200">#FFAB91</color>
+    <color name="deep_orange_300">#FF8A65</color>
+    <color name="deep_orange_400">#FF7043</color>
+    <color name="deep_orange_500">#FF5722</color>
+    <color name="deep_orange_600">#F4511E</color>
+    <color name="deep_orange_700">#E64A19</color>
+    <color name="deep_orange_800">#D84315</color>
+    <color name="deep_orange_900">#BF360C</color>
+    <color name="deep_orange_A100">#FF9E80</color>
+    <color name="deep_orange_A200">#FF6E40</color>
+    <color name="deep_orange_A400">#FF3D00</color>
+    <color name="deep_orange_A700">#DD2C00</color>
+
+    <color name="orange_50">#FFF3E0</color>
+    <color name="orange_100">#FFE0B2</color>
+    <color name="orange_200">#FFCC80</color>
+    <color name="orange_300">#FFB74D</color>
+    <color name="orange_400">#FFA726</color>
+    <color name="orange_500">#FF9800</color>
+    <color name="orange_600">#FB8C00</color>
+    <color name="orange_700">#F57C00</color>
+    <color name="orange_800">#EF6C00</color>
+    <color name="orange_900">#E65100</color>
+    <color name="orange_A100">#FFD180</color>
+    <color name="orange_A200">#FFAB40</color>
+    <color name="orange_A400">#FF9100</color>
+    <color name="orange_A700">#FF6D00</color>
+
+    <color name="blue_50">#E3F2FD</color>
+    <color name="blue_100">#BBDEFB</color>
+    <color name="blue_200">#90CAF9</color>
+    <color name="blue_300">#64B5F6</color>
+    <color name="blue_400">#42A5F5</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="blue_600">#1E88E5</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="blue_800">#1565C0</color>
+    <color name="blue_900">#0D47A1</color>
+    <color name="blue_A100">#82B1FF</color>
+    <color name="blue_A200">#448AFF</color>
+    <color name="blue_A400">#2979FF</color>
+    <color name="blue_A700">#2962FF</color>
+
+    <color name="overlay_dark_10">#1A000000</color>
+    <color name="overlay_dark_20">#33000000</color>
+    <color name="overlay_dark_30">#4D000000</color>
+    <color name="overlay_dark_40">#66000000</color>
+    <color name="overlay_dark_50">#80000000</color>
+    <color name="overlay_dark_60">#99000000</color>
+    <color name="overlay_dark_70">#B3000000</color>
+    <color name="overlay_dark_80">#CC000000</color>
+    <color name="overlay_dark_90">#E6000000</color>
+
+    <color name="green_50">#E8F5E9</color>
+    <color name="green_100">#C8E6C9</color>
+    <color name="green_200">#A5D6A7</color>
+    <color name="green_300">#81C784</color>
+    <color name="green_400">#66BB6A</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="green_600">#43A047</color>
+    <color name="green_700">#388E3C</color>
+    <color name="green_800">#2E7D32</color>
+    <color name="green_900">#1B5E20</color>
+    <color name="green_A100">#B9F6CA</color>
+    <color name="green_A200">#69F0AE</color>
+    <color name="green_A400">#00E676</color>
+    <color name="green_A700">#00C853</color>
+
+    <color name="red_50">#FFEBEE</color>
+    <color name="red_100">#FFCDD2</color>
+    <color name="red_200">#EF9A9A</color>
+    <color name="red_300">#E57373</color>
+    <color name="red_400">#EF5350</color>
+    <color name="red_500">#F44336</color>
+    <color name="red_600">#E53935</color>
+    <color name="red_700">#D32F2F</color>
+    <color name="red_800">#C62828</color>
+    <color name="red_900">#B71C1C</color>
+    <color name="red_A100">#FF8A80</color>
+    <color name="red_A200">#FF5252</color>
+    <color name="red_A400">#FF1744</color>
+    <color name="red_A700">#D50000</color>
+</resources>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cyan_100"
+    tools:context=".LoginActivity"
+    android:padding="20dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/layout_header">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GPS Tracking Car"
+                    android:textAlignment="center"
+                    android:textSize="38sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/JotFormDark"/>
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    app:srcCompat="@mipmap/ic_jeep" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/label1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="20dp"
+                    android:textColor="@color/JotFormDark"
+                    android:textSize="10sp"
+                    android:text="SERVER" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <EditText
+                        android:id="@+id/txt_server"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:textSize="13sp"
+                        android:background="#fbfefd"
+                        android:ems="10"
+                        android:hint="server"
+                        android:inputType="textEmailAddress"
+                        android:textColor="#404040" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/label2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/JotFormDark"
+                    android:textSize="10sp"
+                    android:text="EMAIL" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/txt_username"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:textSize="13sp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:background="#fbfefd"
+                        android:ems="10"
+                        android:hint="email"
+                        android:textColor="#404040"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/label3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/JotFormDark"
+                    android:textSize="10sp"
+                    android:text="PASSWORD" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/txt_password"
+                        android:layout_width="fill_parent"
+                        android:layout_height="50dp"
+                        android:textSize="13sp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:background="#fbfefd"
+                        android:ems="10"
+                        android:hint="password"
+                        android:textColor="#404040"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="fill_parent"
+                    android:layout_height="70dp"
+                    android:layout_below="@+id/password"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="40dp"
+                    android:text="Login"
+                    android:textAllCaps="false"
+                    android:textColor="@color/accent"
+                    android:backgroundTint="@color/action_bar"
+                    android:textSize="18sp" />
+
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_below="@+id/Login"
+                    android:background="@android:color/darker_gray"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="Your vehicle tracker"
+                    android:textColor="@color/JotFormDark"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

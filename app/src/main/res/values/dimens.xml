@@ -1,0 +1,89 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="img_width_height">120dp</dimen>
+    <dimen name="slide_title">30dp</dimen>
+    <dimen name="slide_desc">16dp</dimen>
+    <dimen name="desc_padding">40dp</dimen>
+
+    <dimen name="flexible_space_image_height">200dp</dimen>
+    <dimen name="min_header_height">227dp</dimen>
+    <dimen name="toolbar_left_margin">46dp</dimen>
+    <dimen name="text_size_small">11sp</dimen>
+    <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="text_size_large">24sp</dimen>
+    <dimen name="text_size_extra_large">28sp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+
+    <dimen name="elevation_medium">2dp</dimen>
+    <dimen name="elevation_high">3dp</dimen>
+    <dimen name="radius_low">2dp</dimen>
+    <dimen name="image_list_small">80dp</dimen>
+
+    <!-- for cart item program -->
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="text_size_xmedium">12dp</dimen>
+    <dimen name="view_width_small">1dp</dimen>
+
+    <dimen name="radius_large">5dp</dimen>
+    <dimen name="icon_placeholder_width">48dp</dimen>
+    <dimen name="icon_size">36dp</dimen>
+    <dimen name="icon_size_small">24dp</dimen>
+    <dimen name="circle_indicator_size">15dp</dimen>
+    <dimen name="navigation_drawer_width">300dp</dimen>
+    <dimen name="product_slider_height">240dp</dimen>
+    <dimen name="slideshow_height">148dp</dimen>
+    <dimen name="category_scroll_height">100dp</dimen>
+    <dimen name="product_grid_height">270dp</dimen>
+    <dimen name="big_text_size">21sp</dimen>
+    <dimen name="font_tiny">9sp</dimen>
+    <dimen name="font_very_small">12sp</dimen>
+    <dimen name="font_small">14sp</dimen>
+    <dimen name="font_medium">16sp</dimen>
+    <dimen name="font_big">18sp</dimen>
+    <dimen name="font_very_big">20sp</dimen>
+    <dimen name="font_large">25sp</dimen>
+    <dimen name="toolbar_font_size">35sp</dimen>
+    <dimen name="space_very_small">3dp</dimen>
+    <dimen name="space_big">15dp</dimen>
+    <dimen name="space_very_big">20dp</dimen>
+    <dimen name="space_large">30dp</dimen>
+    <dimen name="space_very_large">50dp</dimen>
+    <dimen name="side_space_type2">24dp</dimen>
+    <dimen name="icon_26dp">26dp</dimen>
+    <dimen name="space_type2">12dp</dimen>
+    <dimen name="wide_button_height">48dp</dimen>
+    <dimen name="button_bottom_height">48dp</dimen>
+    <dimen name="list_pict_width">100dp</dimen>
+    <dimen name="list_pict_height">120dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="app_bar_height">300dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="item_width">200dp</dimen>
+    <dimen name="profile_image">35dp</dimen>
+    <dimen name="profile_width">50dp</dimen>
+    <dimen name="profile_height">50dp</dimen>
+    <dimen name="space_small">5dp</dimen>
+    <dimen name="space_medium">10dp</dimen>
+
+    <!--genaral spacing-->
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_small">3dp</dimen>
+    <dimen name="spacing_medium">5dp</dimen>
+    <dimen name="spacing_xmedium">7dp</dimen>
+    <dimen name="spacing_middle">10dp</dimen>
+    <dimen name="spacing_large">15dp</dimen>
+    <dimen name="spacing_smlarge">18dp</dimen>
+    <dimen name="spacing_mlarge">20dp</dimen>
+    <dimen name="spacing_mxlarge">25dp</dimen>
+    <dimen name="spacing_xlarge">35dp</dimen>
+    <dimen name="spacing_xmlarge">40dp</dimen>
+    <dimen name="spacing_xxlarge">50dp</dimen>
+    <dimen name="spacing_xxxlarge">55dp</dimen>
+</resources>

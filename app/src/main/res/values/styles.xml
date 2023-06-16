@@ -1,0 +1,90 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="MyAppBarLayout" parent="Widget.Design.AppBarLayout">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/cardview_dark_background</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@android:color/white</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/CustomTabTextAppearance</item>
+        <item name="tabSelectedTextColor">@android:color/white</item>
+    </style>
+
+    <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">#e6e6e6</item>
+        <item name="android:textStyle">bold</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/white</item>
+        <item name="android:textColorPrimary">@color/iron</item>
+        <item name="android:background">@color/primary</item>
+    </style>
+
+<!--    <style name="EditTextStyle" parent="Theme.AppCompat.Light">-->
+
+<!--        <item name="android:textSize">@dimen/text_size_medium</item>-->
+<!--        <item name="android:paddingLeft">@dimen/space_medium</item>-->
+<!--        <item name="android:paddingRight">@dimen/space_medium</item>-->
+<!--        <item name="android:paddingTop">@dimen/space_medium</item>-->
+<!--        <item name="android:paddingBottom">@dimen/space_medium</item>-->
+
+<!--    </style>-->
+
+    <style name="fonts">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="headingfonts">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="ToolbarTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginLeft">7sp</item>
+    </style>
+
+    <style name="TextAppearance.AppCompat.Subhead" parent="Base.TextAppearance.AppCompat.Subhead"/>
+
+    <style name="Toolbar.Light" parent="@style/AppTheme">
+        <item name="colorControlNormal">@color/grey_60</item>
+        <item name="android:textColorPrimary">@color/grey_60</item>
+    </style>
+
+    <!--style for ripple library-->
+<!--    <style name="RippleStyleWhite">-->
+<!--        <item name="mrl_rippleOverlay">true</item>-->
+<!--        <item name="mrl_rippleColor">#80FFFFFF</item>-->
+<!--        <item name="mrl_rippleHover">true</item>-->
+<!--        <item name="mrl_rippleAlpha">0.2</item>-->
+<!--    </style>-->
+
+<!--    <style name="RippleStyleBlack" parent="RippleStyleWhite">-->
+<!--        <item name="mrl_rippleColor">#8096989A</item>-->
+<!--    </style>-->
+
+    <style name="EditText.Flat.Grey" parent="@style/AppTheme">
+        <item name="android:textColorHint">@color/grey_40</item>
+        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Subhead</item>
+        <item name="android:textColor">@color/grey_90</item>
+    </style>
+
+</resources>
