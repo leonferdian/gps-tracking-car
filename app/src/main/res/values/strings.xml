@@ -13,7 +13,7 @@
     <string name="menu_report" translatable="false">Track Report</string>
     <string name="menu_logout" translatable="false">Logout</string>
     <string name="title_activity_device_position" translatable="false">DevicePosition</string>
-    <string name="app_version" translatable="false">GPSTC V.1.3</string>
+    <string name="app_version" translatable="false">GPSTC V.1.8</string>
     <string-array name="slc_klasifikasi_outlet">
         <item>--Pilih Klasifikasi--</item>
         <item>DIAMOND</item>
@@ -24,4 +24,12 @@
     </string-array>
 
     <string name="google_maps_key" translatable="false">AIzaSyBtX8Zci5VlzaielTuX_0Y9t-8rhKL0An8</string>
+    <string name="messages_header" translatable="false">Message</string>
+    <string name="signature_title" translatable="false">Signature</string>
+    <string name="reply_title" translatable="false">Repply</string>
+    <string name="sync_header" translatable="false">Security</string>
+    <string name="sync_title" translatable="false">App Lock</string>
+    <string name="attachment_summary_off" translatable="false">Off</string>
+    <string name="attachment_summary_on" translatable="false">On</string>
+    <string name="attachment_title" translatable="false">Finger Lock</string>
 </resources>

@@ -30,6 +30,17 @@
             tools:context=".DevicePosition"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/save_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="128dp"
+            app:backgroundTint="@color/JotFormGrass"
+            app:tint="@color/accent"
+            app:srcCompat="@drawable/baseline_save_24_white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/track_device"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

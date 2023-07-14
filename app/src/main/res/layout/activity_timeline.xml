@@ -50,25 +50,68 @@ tools:context=".Timeline">
             android:drawableStart="@drawable/baseline_directions_car_24_orange"
             android:layout_gravity="center_horizontal"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:visibility="visible"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+        <LinearLayout
+            android:id="@+id/layout_durasi"
+            android:orientation="horizontal"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="center" >
 
-            <EditText
-                android:id="@+id/date"
-                android:layout_width="400dp"
-                android:layout_height="40dp"
-                android:padding="8dp"
-                android:ems="10"
-                android:focusable="false"
-                android:background="@drawable/edittext_border"
-                android:textColor="@color/blue_grey_900"
-                android:inputType="date"
-                android:drawableStart="@drawable/baseline_calendar_month_24"
-                android:layout_gravity="center_horizontal"/>
-        </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lbl_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/date"
+                    android:layout_width="125dp"
+                    android:layout_height="55dp"
+                    android:padding="8dp"
+                    android:textSize="12sp"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:background="@drawable/edittext_border"
+                    android:textColor="@color/blue_grey_900"
+                    android:inputType="date"
+                    android:drawableStart="@drawable/baseline_calendar_month_24"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lbl_jam_buka"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/txt_jam_awal"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Jam Awal"
+                    android:focusable="false"
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lbl_jam_tutup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/txt_jam_akhir"
+                    android:layout_width="125dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Jam Akhir"
+                    android:focusable="false"
+                    android:inputType="textPersonName" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/loadMap"
@@ -79,7 +122,35 @@ tools:context=".Timeline">
             android:text="View"
             android:textColor="@color/white" />
     </LinearLayout>
-    <include layout="@layout/timeline_fragment" />
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mapFrame">
+
+        <include layout="@layout/timeline_fragment" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/list_route"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="128dp"
+            app:backgroundTint="@color/cyan_200"
+            app:tint="@color/accent"
+            app:srcCompat="@drawable/baseline_timeline_24_white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/list_route_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="64dp"
+            app:backgroundTint="@color/qty_product"
+            app:tint="@color/accent"
+            app:srcCompat="@drawable/baseline_remove_circle_24_white" />
+    </FrameLayout>
 </LinearLayout>
 
 </RelativeLayout>

@@ -1,16 +1,23 @@
 package com.gps.cartracker;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,6 +25,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,15 +34,22 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gps.cartracker.util.AppController;
 import com.gps.cartracker.util.server;
 import com.google.android.gms.maps.CameraUpdate;
@@ -58,6 +74,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -85,6 +102,13 @@ public class Timeline extends AppCompatActivity implements
     TextView device_name;
     DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
+    EditText txt_jam_awal,txt_jam_akhir;
+    private Polyline polyline;
+    // Create a custom RetryPolicy with an extended timeout
+    int initialTimeoutMs = 10000; // Initial timeout in milliseconds
+    int maxNumRetries = 3; // Maximum number of retries
+    float backoffMultiplier = 1.5f; // Backoff multiplier for exponential backoff
+    RetryPolicy retryPolicy = new DefaultRetryPolicy(initialTimeoutMs, maxNumRetries, backoffMultiplier);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +136,91 @@ public class Timeline extends AppCompatActivity implements
 
         // Set initial visibility
         linearLayout.setVisibility(View.VISIBLE);
+
+        txt_jam_awal = findViewById(R.id.txt_jam_awal);
+        txt_jam_akhir = findViewById(R.id.txt_jam_akhir);
+
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Calendar cal = Calendar.getInstance();
+        //Add or minus day to current date.
+        //cal.add(Calendar.DATE, 1);
+        //cal.add(Calendar.DATE, -7);
+        cal.add(Calendar.HOUR, 1);
+
+        String timeStamp="";
+        timeStamp = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+//        txt_jam_awal.setText(timeStamp);
+        txt_jam_awal.setText("00:00");
+//        txt_jam_akhir.setText(dateFormat.format(cal.getTime()));
+        txt_jam_akhir.setText("23:59");
+        txt_jam_awal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(Timeline.this, new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        String selectedMinutee,selectedHourr;
+
+                        if(selectedMinute<10){
+                            selectedMinutee = "0"+selectedMinute;
+                        }
+                        else{
+                            selectedMinutee = String.valueOf(selectedMinute);
+                        }
+
+                        if(selectedHour<10){
+                            selectedHourr = "0"+selectedHour;
+                        }
+                        else{
+                            selectedHourr = String.valueOf(selectedHour);
+                        }
+                        txt_jam_awal.setText(selectedHourr + ":" + selectedMinutee);
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Pilih Jam Awal");
+                mTimePicker.show();
+            }
+        });
+        txt_jam_akhir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(Timeline.this, new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        String selectedMinutee,selectedHourr;
+
+                        if(selectedMinute<10){
+                            selectedMinutee = "0"+selectedMinute;
+                        }
+                        else{
+                            selectedMinutee = String.valueOf(selectedMinute);
+                        }
+
+                        if(selectedHour<10){
+                            selectedHourr = "0"+selectedHour;
+                        }
+                        else{
+                            selectedHourr = String.valueOf(selectedHour);
+                        }
+                        txt_jam_akhir.setText(selectedHourr + ":" + selectedMinutee);
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Pilih Jam Akhir");
+                mTimePicker.show();
+            }
+        });
 
         // Set click listener for the button
         ToggFilter.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +279,7 @@ public class Timeline extends AppCompatActivity implements
                     public void onMapReady(GoogleMap googleMap) {
                         // Attach a listener to the date_changed event of the timeline control
                         mMap = googleMap;
-                        LoadMapTrack(device_id, date.getText().toString());
+                        LoadMapTrack(device_id, date.getText().toString(), txt_jam_awal.getText().toString(), txt_jam_akhir.getText().toString());
 
                         if (ActivityCompat.checkSelfPermission(Timeline.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Timeline.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
@@ -194,6 +303,24 @@ public class Timeline extends AppCompatActivity implements
                 });
             }
         });
+
+        FloatingActionButton fabButton = (FloatingActionButton) Timeline.this.findViewById(R.id.list_route);
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+                ListRoute(device_id, date.getText().toString(), txt_jam_awal.getText().toString(), txt_jam_akhir.getText().toString());
+            }
+        });
+
+        FloatingActionButton fabButton2 = (FloatingActionButton) Timeline.this.findViewById(R.id.list_route_stop);
+        fabButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+                ListRouteStop(device_id, date.getText().toString(), txt_jam_awal.getText().toString(), txt_jam_akhir.getText().toString());
+            }
+        });
     }
 
     /**
@@ -211,16 +338,19 @@ public class Timeline extends AppCompatActivity implements
         }
     }
 
-    private void LoadMapTrack(final String device_id, final String tanggal) {
-        String ListTrackURL = server.URL2 + "gps/tracking_report";
+    private void LoadMapTrack(final String device_id, final String tanggal, final String jam_awal, final String jam_akhir) {
+        String ListTrackURL = server.URL2 + "gps/tracking_report2";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ListTrackURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                mMap.clear();
                 hideDialog();
                 Log.e(TAG, "Data Response: " + response.toString());
                 PolylineOptions polylineOptions = new PolylineOptions();
+                PolylineOptions polylineOptions2 = new PolylineOptions();
                 try {
                     JSONArray jsonArray = new JSONArray(response);
+                    int count_trip = 0;
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String name = jsonObject.getString("name");
@@ -229,42 +359,306 @@ public class Timeline extends AppCompatActivity implements
                         String devicetime = jsonObject.getString("devicetime");
                         String type = jsonObject.getString("type");
                         String category = jsonObject.getString("category");
+                        int durasi = jsonObject.getInt("durasi");
+                        String tag = jsonObject.getString("tag");
 //                        points.add(new LatLng(latitude, longitude));
 //                        if (i == jsonArray.length() - 1 || i == 0) {
-                        if (i == jsonArray.length() - 1) {
-                            Geocoder geocoder = new Geocoder(Timeline.this, Locale.getDefault());
-                            List<Address> addresses = null;
-                            try {
-                                addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                            } catch (IOException e) {
-                                e.printStackTrace();
+
+                        String start_trip = "00:00";
+                        String end_trip = "23:59";
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+                        try {
+                            Date date = dateFormat.parse(devicetime);
+
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(date);
+
+                            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                            int minute = calendar.get(Calendar.MINUTE);
+
+                            if (i == 0) {
+                                start_trip = hour + ":" + minute;
                             }
 
-                            assert addresses != null;
-                            String address = addresses.get(0).getAddressLine(0);
+                            System.out.println("Hour: " + hour);
+                            System.out.println("Minute: " + minute);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+
+                        if (i == jsonArray.length() - 1 || durasi > 2) {
+                            Geocoder geocoder = new Geocoder(Timeline.this, Locale.getDefault());
+                            List<Address> addresses = null;
+                            String address = "";
+                            if (durasi >= 3 || i == jsonArray.length() - 1) {
+                                try {
+                                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                assert addresses != null;
+                                address = addresses.get(0).getAddressLine(0);
+                            }
 
                             int resourceId;
-                            switch (category) {
-                                case "car":
-                                    resourceId = R.mipmap.ic_car_marker_yellow;
-                                    break;
-                                case "motorcycle":
-                                    resourceId = R.mipmap.motor1;
-                                    break;
-                                case "truck":
-                                    resourceId = R.mipmap.truck;
-                                    break;
-                                default:
-                                    // Handle the default case or set a fallback BitmapDescriptor
-                                    resourceId = R.mipmap.motor2;
-                                    break;
+
+                            if (i == jsonArray.length() - 1) {
+                                switch (category) {
+                                    case "car":
+                                        resourceId = R.mipmap.ic_car_marker_yellow;
+                                        break;
+                                    case "motorcycle":
+                                        resourceId = R.mipmap.motor1;
+                                        break;
+                                    case "truck":
+                                        resourceId = R.mipmap.truck;
+                                        break;
+                                    default:
+                                        // Handle the default case or set a fallback BitmapDescriptor
+                                        resourceId = R.mipmap.motor2;
+                                        break;
+                                }
+                            } else {
+                                if (durasi > 3) {
+                                    resourceId = R.mipmap.stop_car;
+                                } else {
+                                    resourceId = R.mipmap.tfc_light;
+                                }
                             }
 
                             // Create start marker
                             Marker pointMarker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(latitude, longitude))
                                     .icon(BitmapDescriptorFactory.fromResource(resourceId))
-                                    .title(name + " (" + type + ")")
+                                    .title(name)
+                                    .snippet(" (" + devicetime + ")" + address)
+                                    .draggable(true)
+                            );
+                        }
+
+                        if (!tag.equals("null")) {
+                            count_trip++;
+                            String trip = "";
+                            int color = R.color.grey_40;
+
+                            switch(count_trip) {
+                                case 1:
+                                    trip = "A";
+                                    color = R.color.orange_500;
+                                    break;
+                                case 2:
+                                    trip = "B";
+                                    color = R.color.green_color;
+                                    break;
+                                case 3:
+                                    trip = "C";
+                                    color = R.color.red_purple;
+                                    break;
+                                case 4:
+                                    trip = "D";
+                                    color = R.color.yellow_color;
+                                    break;
+                            }
+
+                            try {
+                                Date date = dateFormat.parse(devicetime);
+
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.setTime(date);
+
+                                int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                                int minute = calendar.get(Calendar.MINUTE);
+                                end_trip = hour + ":" + minute;
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                            Button btn_trip = new Button(Timeline.this);
+                            btn_trip.setText("Trip " + trip); // Set the text for the button
+                            btn_trip.setBackgroundColor(getResources().getColor(color));
+                            String finalStart_trip = start_trip;
+                            String finalEnd_trip = end_trip;
+                            btn_trip.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    showDialog();
+                                    LoadTrip(device_id, tanggal, finalStart_trip, finalEnd_trip);
+                                }
+                            });
+
+                            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT
+                            );
+                            params.gravity = Gravity.END; // Set the position of the button
+                            params.setMargins(16, 16, 16, 16); // Set margins if needed
+
+                            FrameLayout frameLayout = findViewById(R.id.mapFrame); // Replace with your actual FrameLayout ID
+                            frameLayout.addView(btn_trip, params);
+                        }
+
+                        polylineOptions.add(new LatLng(latitude, longitude));
+                        polylineOptions.clickable(true);
+                        polylineOptions.color(Color.BLUE);
+                        polylineOptions.width(12);
+                        polylineOptions.jointType(JointType.ROUND);
+//                        polyline.setTag(address);
+                    }
+
+                    Polyline polyline = mMap.addPolyline(polylineOptions);
+
+                    if (jsonArray.length() > 0) {
+                        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+                        for (LatLng latLng : polyline.getPoints()) {
+                            boundsBuilder.include(latLng);
+                        }
+
+                        LatLngBounds bounds = boundsBuilder.build();
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 12);
+                        mMap.animateCamera(cameraUpdate);
+                    } else {
+//                        Toast.makeText(getApplicationContext(), "No track found", Toast.LENGTH_SHORT).show();
+                        // Get the user's current location
+                        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        if (ActivityCompat.checkSelfPermission(Timeline.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(Timeline.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        }
+
+                        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                        // Check if the location is not null
+                        if (location != null) {
+                            // Get the latitude and longitude of the location
+                            double lat = location.getLatitude();
+                            double lng = location.getLongitude();
+
+                            // Create a new LatLng object with the location coordinates
+                            LatLng latLng = new LatLng(lat, lng);
+
+                            // Create a new CameraUpdate object and move the camera to the user's location
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 12);
+                            mMap.moveCamera(cameraUpdate);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.getMessage() != null) {
+                    Log.e(TAG, "Error: " + error.getMessage());
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Connection error!", Toast.LENGTH_LONG).show();
+                }
+                hideDialog();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+//                params.put("_token", csrfToken);
+                params.put("device_id", device_id);
+                params.put("tanggal", tanggal);
+                params.put("jam_awal", jam_awal);
+                params.put("jam_akhir", jam_akhir);
+                return params;
+            }
+
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                Map<String, String> headers = new HashMap<>();
+//                headers.put("X-CSRF-Token", csrfToken);
+//                return headers;
+//            }
+        };
+
+        stringRequest.setRetryPolicy(retryPolicy);
+        AppController.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private void LoadTrip(final String device_id, final String tanggal, final String jam_awal, final String jam_akhir) {
+        String ListTrackURL = server.URL2 + "gps/tracking_report2";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ListTrackURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mMap.clear();
+                hideDialog();
+                Log.e(TAG, "Data Response: " + response.toString());
+                PolylineOptions polylineOptions = new PolylineOptions();
+                PolylineOptions polylineOptions2 = new PolylineOptions();
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    int count_trip = 0;
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String name = jsonObject.getString("name");
+                        double latitude = jsonObject.getDouble("latitude");
+                        double longitude = jsonObject.getDouble("longitude");
+                        String devicetime = jsonObject.getString("devicetime");
+                        String type = jsonObject.getString("type");
+                        String category = jsonObject.getString("category");
+                        int durasi = jsonObject.getInt("durasi");
+                        String tag = jsonObject.getString("tag");
+//                        points.add(new LatLng(latitude, longitude));
+//                        if (i == jsonArray.length() - 1 || i == 0) {
+                        if (i == jsonArray.length() - 1 || durasi > 2) {
+                            Geocoder geocoder = new Geocoder(Timeline.this, Locale.getDefault());
+                            List<Address> addresses = null;
+                            String address = "";
+                            if (durasi >= 3 || i == jsonArray.length() - 1) {
+                                try {
+                                    addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                assert addresses != null;
+                                address = addresses.get(0).getAddressLine(0);
+                            }
+
+                            int resourceId;
+
+                            if (i == jsonArray.length() - 1) {
+                                switch (category) {
+                                    case "car":
+                                        resourceId = R.mipmap.ic_car_marker_yellow;
+                                        break;
+                                    case "motorcycle":
+                                        resourceId = R.mipmap.motor1;
+                                        break;
+                                    case "truck":
+                                        resourceId = R.mipmap.truck;
+                                        break;
+                                    default:
+                                        // Handle the default case or set a fallback BitmapDescriptor
+                                        resourceId = R.mipmap.motor2;
+                                        break;
+                                }
+                            } else {
+                                if (durasi > 3) {
+                                    resourceId = R.mipmap.stop_car;
+                                } else {
+                                    resourceId = R.mipmap.tfc_light;
+                                }
+                            }
+
+                            // Create start marker
+                            Marker pointMarker = mMap.addMarker(new MarkerOptions()
+                                    .position(new LatLng(latitude, longitude))
+                                    .icon(BitmapDescriptorFactory.fromResource(resourceId))
+                                    .title(name)
                                     .snippet(" (" + devicetime + ")" + address)
                                     .draggable(true)
                             );
@@ -342,6 +736,8 @@ public class Timeline extends AppCompatActivity implements
 //                params.put("_token", csrfToken);
                 params.put("device_id", device_id);
                 params.put("tanggal", tanggal);
+                params.put("jam_awal", jam_awal);
+                params.put("jam_akhir", jam_akhir);
                 return params;
             }
 
@@ -353,6 +749,261 @@ public class Timeline extends AppCompatActivity implements
 //            }
         };
 
+        stringRequest.setRetryPolicy(retryPolicy);
+        AppController.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private void ListRoute(final String device_id, final String tanggal, final String jam_awal, final String jam_akhir) {
+        String ListTrackURL = server.URL2 + "gps/list_route";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ListTrackURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                hideDialog();
+                Log.e(TAG, "Data Response: " + response.toString());
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    // Create a LinearLayout as the container for TextViews
+                    LinearLayout linearLayout = new LinearLayout(Timeline.this);
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    linearLayout.setBackgroundColor(getResources().getColor(R.color.white));
+                    int leftPadding = 16;
+                    int topPadding = 8;
+                    int rightPadding = 16;
+                    int bottomPadding = 8;
+                    linearLayout.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+
+                    ScrollView scrollView = new ScrollView(Timeline.this);
+                    scrollView.addView(linearLayout);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        double latitude = jsonObject.getDouble("latitude");
+                        double longitude = jsonObject.getDouble("longitude");
+                        String deviceid = jsonObject.getString("deviceid");
+                        String name = jsonObject.getString("name");
+                        int durasi = jsonObject.getInt("durasi");
+                        String devicetime = jsonObject.getString("devicetime");
+
+                        TextView textView = new TextView(Timeline.this);
+                        textView.setTextColor(getResources().getColor(R.color.action_bar));
+
+                        int RouteIcon;
+                        String address;
+                        if (durasi > 1 || i == jsonArray.length() - 1 || i == 0) {
+                            switch (durasi) {
+                                case 2:
+                                    RouteIcon = R.drawable.baseline_near_me_24_green;
+                                    break;
+                                case 3:
+                                    RouteIcon = R.drawable.baseline_traffic_24_red;
+                                    break;
+                                default:
+                                    RouteIcon = R.drawable.baseline_do_not_disturb_on_total_silence_24_red;
+                                    break;
+                            }
+
+                            Drawable drawable = getResources().getDrawable(RouteIcon);
+                            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+                            Geocoder geocoder = new Geocoder(Timeline.this, Locale.getDefault());
+                            List<Address> addresses = null;
+                            try {
+                                addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            assert addresses != null;
+                            address = addresses.get(0).getAddressLine(0);
+
+                            if (name != "null") {
+                                textView.setText(" (" + devicetime + ") \r\n " + address + " \r\n Tag: " + name);
+                            } else {
+                                textView.setText(" (" + devicetime + ") \r\n " + address);
+                            }
+                            linearLayout.addView(textView);
+
+                            View lineView = new View(Timeline.this);
+                            int lineHeight = 2; // Set the desired height of the line in pixels
+                            int lineColor = Color.BLACK; // Set the desired color of the line
+                            // Set the width and height of the line
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    lineHeight
+                            );
+                            lineView.setLayoutParams(layoutParams);
+                            lineView.setBackgroundColor(lineColor);
+                            linearLayout.addView(lineView);
+                        }
+                    }
+
+                    // Create an AlertDialog with the LinearLayout as the custom view
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Timeline.this);
+                    builder.setTitle("Route Device");
+                    builder.setView(scrollView);
+                    builder.setPositiveButton("Close", null);
+                    // Add any desired buttons or listeners
+                    // Show the dialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.getMessage() != null) {
+                    Log.e(TAG, "Error: " + error.getMessage());
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Connection error!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+//                params.put("_token", csrfToken);
+                params.put("device_id", device_id);
+                params.put("tanggal", tanggal);
+                params.put("jam_awal", jam_awal);
+                params.put("jam_akhir", jam_akhir);
+                return params;
+            }
+
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                Map<String, String> headers = new HashMap<>();
+//                headers.put("X-CSRF-Token", csrfToken);
+//                return headers;
+//            }
+        };
+        stringRequest.setRetryPolicy(retryPolicy);
+        AppController.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+    private void ListRouteStop(final String device_id, final String tanggal, final String jam_awal, final String jam_akhir) {
+        String ListTrackURL = server.URL2 + "gps/list_route";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ListTrackURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                hideDialog();
+                Log.e(TAG, "Data Response: " + response.toString());
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    // Create a LinearLayout as the container for TextViews
+                    LinearLayout linearLayout = new LinearLayout(Timeline.this);
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
+                    linearLayout.setBackgroundColor(getResources().getColor(R.color.white));
+
+                    ScrollView scrollView = new ScrollView(Timeline.this);
+                    scrollView.addView(linearLayout);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        double latitude = jsonObject.getDouble("latitude");
+                        double longitude = jsonObject.getDouble("longitude");
+                        String deviceid = jsonObject.getString("deviceid");
+                        String name = jsonObject.getString("name");
+                        int durasi = jsonObject.getInt("durasi");
+                        String devicetime = jsonObject.getString("devicetime");
+
+                        TextView textView = new TextView(Timeline.this);
+                        textView.setTextColor(getResources().getColor(R.color.action_bar));
+
+                        int RouteIcon;
+                        String address;
+                        if (durasi > 3 || i == jsonArray.length() - 1 || i == 0) {
+                            switch (durasi) {
+                                case 3:
+                                    RouteIcon = R.drawable.baseline_near_me_24_green;
+                                    break;
+                                default:
+                                    RouteIcon = R.drawable.baseline_do_not_disturb_on_total_silence_24_red;
+                                    break;
+                            }
+
+                            Drawable drawable = getResources().getDrawable(RouteIcon);
+                            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+                            textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+
+                            Geocoder geocoder = new Geocoder(Timeline.this, Locale.getDefault());
+                            List<Address> addresses = null;
+                            try {
+                                addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            assert addresses != null;
+                            address = addresses.get(0).getAddressLine(0);
+
+                            if (name != "null") {
+                                textView.setText(" (" + devicetime + ") \r\n " + address + " \r\n Tag: " + name);
+                            } else {
+                                textView.setText(" (" + devicetime + ") \r\n " + address);
+                            }
+                            linearLayout.addView(textView);
+
+                            View lineView = new View(Timeline.this);
+                            int lineHeight = 2; // Set the desired height of the line in pixels
+                            int lineColor = Color.BLACK; // Set the desired color of the line
+                            // Set the width and height of the line
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    lineHeight
+                            );
+                            lineView.setLayoutParams(layoutParams);
+                            lineView.setBackgroundColor(lineColor);
+                            linearLayout.addView(lineView);
+                        }
+                    }
+
+                    // Create an AlertDialog with the LinearLayout as the custom view
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Timeline.this);
+                    builder.setTitle("Route Stop");
+                    builder.setView(scrollView);
+                    builder.setPositiveButton("Close", null);
+                    // Add any desired buttons or listeners
+                    // Show the dialog
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.getMessage() != null) {
+                    Log.e(TAG, "Error: " + error.getMessage());
+                    Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Connection error!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+//                params.put("_token", csrfToken);
+                params.put("device_id", device_id);
+                params.put("tanggal", tanggal);
+                params.put("jam_awal", jam_awal);
+                params.put("jam_akhir", jam_akhir);
+                return params;
+            }
+
+//            @Override
+//            public Map<String, String> getHeaders() {
+//                Map<String, String> headers = new HashMap<>();
+//                headers.put("X-CSRF-Token", csrfToken);
+//                return headers;
+//            }
+        };
+        stringRequest.setRetryPolicy(retryPolicy);
         AppController.getInstance(this).addToRequestQueue(stringRequest);
     }
 
@@ -400,7 +1051,6 @@ public class Timeline extends AppCompatActivity implements
 
     public boolean onSupportNavigateUp(){
         onBackPressed();
-
         return true;
     }
 

@@ -198,7 +198,7 @@ public class ListDevicePosition extends AppCompatActivity {
 
                         LatLng centerPoint = new LatLng(averageLatitude, averageLongitude);
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(centerPoint);
-                        mMap.animateCamera(cameraUpdate);
+                        mMap.moveCamera(cameraUpdate);
                     } else {
                         Toast.makeText(getApplicationContext(), "No device found", Toast.LENGTH_SHORT).show();
                         // Get the user's current location

@@ -1,9 +1,13 @@
 package com.gps.cartracker;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.hardware.biometrics.BiometricPrompt;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -23,6 +27,10 @@ import com.gps.cartracker.ui.report.ReportFragment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
+import androidx.core.os.CancellationSignal;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -43,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean doubleBackToExitPressedOnce = false;
     private static final int DOUBLE_BACK_EXIT_INTERVAL = 2000; // 2 seconds
+    private static final int REQUEST_CODE_PERMISSION = 123;
+
+    private FingerprintManagerCompat fingerprintManager;
+    private CancellationSignal cancellationSignal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedpreferences = getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
         boolean isLoggedIn = sharedpreferences.getBoolean(LoginActivity.session_status, false);
+        boolean BiometricActivated = sharedpreferences.getBoolean(SettingsActivity.biometric_lock, false);
         String get_email = sharedpreferences.getString("name", null);
         String user_id = sharedpreferences.getString("user_id", "");
         name.setText(get_email);
@@ -93,6 +106,18 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
+        }
+
+        if (BiometricActivated) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Request the necessary permissions
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.USE_FINGERPRINT}, REQUEST_CODE_PERMISSION);
+            } else {
+                // Initialize the fingerprint authentication
+                initFingerprintAuth();
+            }
         }
 
         //get menu items
@@ -144,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 // TODO Auto-generated method stub
                 // Open setting page
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
             }
         });
@@ -191,6 +218,65 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this, "Log Out Successfully", Toast.LENGTH_LONG).show();
     }
 
+    private void initFingerprintAuth() {
+        fingerprintManager = FingerprintManagerCompat.from(this);
+
+        // Check if the device has fingerprint hardware and if the user has enrolled fingerprints
+        if (!fingerprintManager.isHardwareDetected()) {
+            // Fingerprint hardware is not available
+            Toast.makeText(this, "Fingerprint hardware not detected", Toast.LENGTH_SHORT).show();
+        } else if (!fingerprintManager.hasEnrolledFingerprints()) {
+            // User has not enrolled any fingerprints
+            Toast.makeText(this, "No fingerprints enrolled", Toast.LENGTH_SHORT).show();
+        } else {
+            // Start fingerprint authentication
+            startFingerprintAuth();
+        }
+    }
+
+    private void startFingerprintAuth() {
+        cancellationSignal = new CancellationSignal();
+        fingerprintManager.authenticate(null, 0, cancellationSignal,
+                new FingerprintManagerCompat.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticationError(int errMsgId, CharSequence errString) {
+                        // Authentication error occurred
+                        Toast.makeText(MainActivity.this,
+                                "Authentication error: " + errString, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+                        // Authentication help message
+                        Toast.makeText(MainActivity.this,
+                                "Authentication help: " + helpString, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
+                        // Authentication succeeded
+                        Toast.makeText(MainActivity.this, "Authentication succeeded",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAuthenticationFailed() {
+                        // Authentication failed
+                        Toast.makeText(MainActivity.this, "Authentication failed",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }, null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Cancel fingerprint authentication if it's in progress
+        if (cancellationSignal != null) {
+            cancellationSignal.cancel();
+        }
+    }
+
     private void changeStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -218,6 +304,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }, DOUBLE_BACK_EXIT_INTERVAL);
     }
+
+
 
     private void exitApplication() {
         // Clear the session or perform any necessary cleanup
