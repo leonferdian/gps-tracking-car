@@ -10,8 +10,8 @@ android {
         applicationId "com.gps.cartracker"
         minSdk 23
         targetSdk 33
-        versionCode 8
-        versionName "GPSTC1.8"
+        versionCode 9
+        versionName "GPSTC1.9"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

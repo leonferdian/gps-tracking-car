@@ -13,7 +13,7 @@
     <string name="menu_report" translatable="false">Track Report</string>
     <string name="menu_logout" translatable="false">Logout</string>
     <string name="title_activity_device_position" translatable="false">DevicePosition</string>
-    <string name="app_version" translatable="false">GPSTC V.1.8</string>
+    <string name="app_version" translatable="false">GPSTC V.1.9</string>
     <string-array name="slc_klasifikasi_outlet">
         <item>--Pilih Klasifikasi--</item>
         <item>DIAMOND</item>

@@ -24,6 +24,8 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -77,6 +79,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -351,6 +354,13 @@ public class Timeline extends AppCompatActivity implements
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     int count_trip = 0;
+                    double startLat = 0;
+                    double startLng = 0;
+                    FrameLayout frameLayout = findViewById(R.id.mapFrame); // Replace with your actual FrameLayout ID
+                    String jenis_kendaraan = "";
+                    String nama_kendaraan = "";
+                    Marker pointMarker = null;
+                    List<LatLng> polylinePoints = new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String name = jsonObject.getString("name");
@@ -363,6 +373,16 @@ public class Timeline extends AppCompatActivity implements
                         String tag = jsonObject.getString("tag");
 //                        points.add(new LatLng(latitude, longitude));
 //                        if (i == jsonArray.length() - 1 || i == 0) {
+
+                        jenis_kendaraan = category;
+                        nama_kendaraan = name;
+
+                        if (i == 0) {
+                            startLat = latitude;
+                            startLng = longitude;
+                        }
+
+                        polylinePoints.add(new LatLng(latitude, longitude));
 
                         String start_trip = "00:00";
                         String end_trip = "23:59";
@@ -393,14 +413,19 @@ public class Timeline extends AppCompatActivity implements
                             Geocoder geocoder = new Geocoder(Timeline.this, Locale.getDefault());
                             List<Address> addresses = null;
                             String address = "";
+
                             if (durasi >= 3 || i == jsonArray.length() - 1) {
                                 try {
                                     addresses = geocoder.getFromLocation(latitude, longitude, 1);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+
                                 assert addresses != null;
-                                address = addresses.get(0).getAddressLine(0);
+                                if (!addresses.isEmpty()) {
+                                    address = addresses.get(0).getAddressLine(0);
+                                }
+
                             }
 
                             int resourceId;
@@ -430,7 +455,7 @@ public class Timeline extends AppCompatActivity implements
                             }
 
                             // Create start marker
-                            Marker pointMarker = mMap.addMarker(new MarkerOptions()
+                            pointMarker = mMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(latitude, longitude))
                                     .icon(BitmapDescriptorFactory.fromResource(resourceId))
                                     .title(name)
@@ -486,6 +511,7 @@ public class Timeline extends AppCompatActivity implements
                                 public void onClick(View v) {
                                     showDialog();
                                     LoadTrip(device_id, tanggal, finalStart_trip, finalEnd_trip);
+                                    btn_trip.setBackgroundColor(getResources().getColor(R.color.grey_60));
                                 }
                             });
 
@@ -494,9 +520,14 @@ public class Timeline extends AppCompatActivity implements
                                     FrameLayout.LayoutParams.WRAP_CONTENT
                             );
                             params.gravity = Gravity.END; // Set the position of the button
-                            params.setMargins(16, 16, 16, 16); // Set margins if needed
 
-                            FrameLayout frameLayout = findViewById(R.id.mapFrame); // Replace with your actual FrameLayout ID
+                            int mrgn_top = 16;
+                            if (count_trip > 1) {
+                                mrgn_top = 200;
+                            }
+
+                            params.setMargins(16, mrgn_top, 16, 16); // Set margins if needed
+
                             frameLayout.addView(btn_trip, params);
                         }
 
@@ -509,6 +540,84 @@ public class Timeline extends AppCompatActivity implements
                     }
 
                     Polyline polyline = mMap.addPolyline(polylineOptions);
+
+                    // Create a circular play button
+                    ImageButton playButton = new ImageButton(Timeline.this);
+                    playButton.setImageResource(R.drawable.baseline_play_circle_48_violet); // Set your play button icon here
+                    playButton.setBackgroundResource(android.R.color.transparent); // Remove background
+
+                    // Set button size
+                    int buttonSize = getResources().getDimensionPixelSize(R.dimen.button_bottom_height); // Define in dimensions resources
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(buttonSize, buttonSize);
+
+                    // Set button position to center bottom
+                    layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+                    layoutParams.bottomMargin = getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin); // Define in dimensions resources
+
+                    // Apply layout parameters to the button
+                    playButton.setLayoutParams(layoutParams);
+
+                    int icon_marker;
+
+                    switch (jenis_kendaraan) {
+                        case "car":
+                            icon_marker = R.mipmap.ic_car_yellow_front;
+                            break;
+                        case "motorcycle":
+                            icon_marker = R.mipmap.motor1;
+                            break;
+                        case "truck":
+                            icon_marker = R.mipmap.truck;
+                            break;
+                        default:
+                            // Handle the default case or set a fallback BitmapDescriptor
+                            icon_marker = R.mipmap.motor2;
+                            break;
+                    }
+
+                    final Handler handler = new Handler();
+                    final long startTime = SystemClock.uptimeMillis();
+                    final int duration = 100000; // Total duration of animation in milliseconds
+
+                    double finalStartLat = startLat;
+                    double finalStartLng = startLng;
+                    String finalNama_kendaraan = nama_kendaraan;
+                    Marker finalPointMarker = pointMarker;
+                    playButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            finalPointMarker.remove();
+
+                            // Assuming you have a GoogleMap instance named "googleMap"
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(new LatLng(finalStartLat, finalStartLng))
+                                    .icon(BitmapDescriptorFactory.fromResource(icon_marker))
+                                    .title(finalNama_kendaraan);
+
+                            final Marker movingMarker = mMap.addMarker(markerOptions);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    long elapsedTime = SystemClock.uptimeMillis() - startTime;
+                                    float fraction = elapsedTime / (float) duration; // Fraction of elapsed time
+
+                                    LatLng newPosition = interpolate(fraction, polylinePoints);
+                                    movingMarker.setPosition(newPosition);
+
+                                    if (fraction < 1.0f) {
+                                        float rotationAngle = calculateBearing(newPosition, interpolate(fraction + 0.01f, polylinePoints)); // Adjust fraction to get next point
+                                        movingMarker.setRotation(rotationAngle);
+
+                                        handler.postDelayed(this, 16); // Update marker position and rotation every 16ms
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    // Add the button to the FrameLayout
+                    frameLayout.addView(playButton);
 
                     if (jsonArray.length() > 0) {
                         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
@@ -589,6 +698,42 @@ public class Timeline extends AppCompatActivity implements
         AppController.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    private float calculateBearing(LatLng startLatLng, LatLng endLatLng) {
+        double startLat = Math.toRadians(startLatLng.latitude);
+        double startLng = Math.toRadians(startLatLng.longitude);
+        double endLat = Math.toRadians(endLatLng.latitude);
+        double endLng = Math.toRadians(endLatLng.longitude);
+
+        double deltaLng = endLng - startLng;
+
+        double y = Math.sin(deltaLng) * Math.cos(endLat);
+        double x = Math.cos(startLat) * Math.sin(endLat) - Math.sin(startLat) * Math.cos(endLat) * Math.cos(deltaLng);
+
+        double bearing = Math.atan2(y, x);
+        return (float) Math.toDegrees(bearing);
+    }
+
+    private LatLng interpolate(float fraction, List<LatLng> polylinePoints) {
+        int numberOfPoints = polylinePoints.size() - 1;
+        int index = (int) (fraction * numberOfPoints);
+
+        // Ensure the index is within bounds
+        if (index >= numberOfPoints) {
+            return polylinePoints.get(numberOfPoints);
+        }
+
+        float remainder = fraction * numberOfPoints - index;
+
+        LatLng start = polylinePoints.get(index);
+        LatLng end = polylinePoints.get(index + 1);
+
+        double lat = start.latitude + remainder * (end.latitude - start.latitude);
+        double lng = start.longitude + remainder * (end.longitude - start.longitude);
+
+        return new LatLng(lat, lng);
+    }
+
+
     private void LoadTrip(final String device_id, final String tanggal, final String jam_awal, final String jam_akhir) {
         String ListTrackURL = server.URL2 + "gps/tracking_report2";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ListTrackURL, new Response.Listener<String>() {
@@ -601,7 +746,6 @@ public class Timeline extends AppCompatActivity implements
                 PolylineOptions polylineOptions2 = new PolylineOptions();
                 try {
                     JSONArray jsonArray = new JSONArray(response);
-                    int count_trip = 0;
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String name = jsonObject.getString("name");
@@ -625,7 +769,9 @@ public class Timeline extends AppCompatActivity implements
                                     e.printStackTrace();
                                 }
                                 assert addresses != null;
-                                address = addresses.get(0).getAddressLine(0);
+                                if (!addresses.isEmpty()) {
+                                    address = addresses.get(0).getAddressLine(0);
+                                }
                             }
 
                             int resourceId;
@@ -788,7 +934,7 @@ public class Timeline extends AppCompatActivity implements
                         textView.setTextColor(getResources().getColor(R.color.action_bar));
 
                         int RouteIcon;
-                        String address;
+                        String address = "";
                         if (durasi > 1 || i == jsonArray.length() - 1 || i == 0) {
                             switch (durasi) {
                                 case 2:
@@ -815,7 +961,9 @@ public class Timeline extends AppCompatActivity implements
                             }
 
                             assert addresses != null;
-                            address = addresses.get(0).getAddressLine(0);
+                            if (!addresses.isEmpty()) {
+                                address = addresses.get(0).getAddressLine(0);
+                            }
 
                             if (name != "null") {
                                 textView.setText(" (" + devicetime + ") \r\n " + address + " \r\n Tag: " + name);
@@ -914,7 +1062,7 @@ public class Timeline extends AppCompatActivity implements
                         textView.setTextColor(getResources().getColor(R.color.action_bar));
 
                         int RouteIcon;
-                        String address;
+                        String address = "";
                         if (durasi > 3 || i == jsonArray.length() - 1 || i == 0) {
                             switch (durasi) {
                                 case 3:
@@ -938,7 +1086,9 @@ public class Timeline extends AppCompatActivity implements
                             }
 
                             assert addresses != null;
-                            address = addresses.get(0).getAddressLine(0);
+                            if (!addresses.isEmpty()) {
+                                address = addresses.get(0).getAddressLine(0);
+                            }
 
                             if (name != "null") {
                                 textView.setText(" (" + devicetime + ") \r\n " + address + " \r\n Tag: " + name);

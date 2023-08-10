@@ -417,7 +417,10 @@ public class DevicePosition extends AppCompatActivity implements
                         }
 
                         assert addresses != null;
-                        String address = addresses.get(0).getAddressLine(0);
+                        String address = "";
+                        if (!addresses.isEmpty()) {
+                            address = addresses.get(0).getAddressLine(0);
+                        }
 
                         int resourceId;
 
@@ -445,10 +448,11 @@ public class DevicePosition extends AppCompatActivity implements
                                 .snippet("(" + status + ") " + devicetime)
                         );
 
+                        String finalAddress = address;
                         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker) {
-                                Toast.makeText(getApplicationContext(), address, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), finalAddress, Toast.LENGTH_LONG).show();
                                 // Return 'false' to allow the default behavior of displaying an info window (if applicable)
                                 // Return 'true' if you have consumed the click event and don't want to show an info window
                                 return false;
@@ -484,7 +488,7 @@ public class DevicePosition extends AppCompatActivity implements
                                     public void onClick(DialogInterface dialog, int which) {
                                         // Get the entered name from the EditText
                                         String name = nameEditText.getText().toString();
-                                        SaveAddress(positionid, address, device_id, name, latitude, longitude);
+                                        SaveAddress(positionid, finalAddress, device_id, name, latitude, longitude);
                                         // Perform any further actions with the entered name
                                         // For example, you can save it to a variable or pass it to another function
                                     }

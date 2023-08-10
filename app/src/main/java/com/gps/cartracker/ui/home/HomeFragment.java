@@ -189,7 +189,7 @@ public class HomeFragment extends Fragment {
                         linearLayout.addView(button);
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
