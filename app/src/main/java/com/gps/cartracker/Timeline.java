@@ -106,11 +106,16 @@ public class Timeline extends AppCompatActivity implements
     DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
     EditText txt_jam_awal,txt_jam_akhir;
-    private Polyline polyline;
     // Create a custom RetryPolicy with an extended timeout
     int initialTimeoutMs = 10000; // Initial timeout in milliseconds
     int maxNumRetries = 3; // Maximum number of retries
     float backoffMultiplier = 1.5f; // Backoff multiplier for exponential backoff
+    private boolean isAnimationPaused = false;
+    private int currentPointIndex = 0;
+    final Handler handler = new Handler();
+    private long startTime = SystemClock.uptimeMillis();
+    final int duration = 100000; // Total duration of animation in milliseconds
+    private LatLng pausedPosition;
     RetryPolicy retryPolicy = new DefaultRetryPolicy(initialTimeoutMs, maxNumRetries, backoffMultiplier);
 
     @Override
@@ -546,6 +551,11 @@ public class Timeline extends AppCompatActivity implements
                     playButton.setImageResource(R.drawable.baseline_play_circle_48_violet); // Set your play button icon here
                     playButton.setBackgroundResource(android.R.color.transparent); // Remove background
 
+//                    ImageButton playButton2 = new ImageButton(Timeline.this);
+//                    playButton2.setImageResource(R.drawable.baseline_pause_circle_48_violet); // Set your play button icon here
+//                    playButton2.setBackgroundResource(android.R.color.transparent); // Remove background
+//                    playButton2.setVisibility(View.GONE);
+
                     // Set button size
                     int buttonSize = getResources().getDimensionPixelSize(R.dimen.button_bottom_height); // Define in dimensions resources
                     FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(buttonSize, buttonSize);
@@ -556,6 +566,7 @@ public class Timeline extends AppCompatActivity implements
 
                     // Apply layout parameters to the button
                     playButton.setLayoutParams(layoutParams);
+//                    playButton2.setLayoutParams(layoutParams);
 
                     int icon_marker;
 
@@ -564,60 +575,61 @@ public class Timeline extends AppCompatActivity implements
                             icon_marker = R.mipmap.ic_car_yellow_front;
                             break;
                         case "motorcycle":
-                            icon_marker = R.mipmap.motor1;
+                            icon_marker = R.mipmap.motorcycle_vector_top_view;
                             break;
                         case "truck":
-                            icon_marker = R.mipmap.truck;
+                            icon_marker = R.mipmap.ic_truck_red_top;
                             break;
                         default:
                             // Handle the default case or set a fallback BitmapDescriptor
-                            icon_marker = R.mipmap.motor2;
+                            icon_marker = R.mipmap.ic_car_gps;
                             break;
                     }
-
-                    final Handler handler = new Handler();
-                    final long startTime = SystemClock.uptimeMillis();
-                    final int duration = 100000; // Total duration of animation in milliseconds
 
                     double finalStartLat = startLat;
                     double finalStartLng = startLng;
                     String finalNama_kendaraan = nama_kendaraan;
                     Marker finalPointMarker = pointMarker;
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(new LatLng(finalStartLat, finalStartLng))
+                            .icon(BitmapDescriptorFactory.fromResource(icon_marker))
+                            .title(finalNama_kendaraan);
+
+                    final Marker movingMarker = mMap.addMarker(markerOptions);
                     playButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+//                            playButton.setVisibility(View.GONE);
+//                            playButton2.setVisibility(View.VISIBLE);
                             finalPointMarker.remove();
 
-                            // Assuming you have a GoogleMap instance named "googleMap"
-                            MarkerOptions markerOptions = new MarkerOptions()
-                                    .position(new LatLng(finalStartLat, finalStartLng))
-                                    .icon(BitmapDescriptorFactory.fromResource(icon_marker))
-                                    .title(finalNama_kendaraan);
+                            if (isAnimationPaused) {
+                                isAnimationPaused = false;
+                                playButton.setImageResource(R.drawable.baseline_pause_circle_48_violet);
+                                pausedPosition = movingMarker.getPosition();
+                            } else {
+                                isAnimationPaused = true;
+                                playButton.setImageResource(R.drawable.baseline_play_circle_48_violet);
+                            }
 
-                            final Marker movingMarker = mMap.addMarker(markerOptions);
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    long elapsedTime = SystemClock.uptimeMillis() - startTime;
-                                    float fraction = elapsedTime / (float) duration; // Fraction of elapsed time
-
-                                    LatLng newPosition = interpolate(fraction, polylinePoints);
-                                    movingMarker.setPosition(newPosition);
-
-                                    if (fraction < 1.0f) {
-                                        float rotationAngle = calculateBearing(newPosition, interpolate(fraction + 0.01f, polylinePoints)); // Adjust fraction to get next point
-                                        movingMarker.setRotation(rotationAngle);
-
-                                        handler.postDelayed(this, 16); // Update marker position and rotation every 16ms
-                                    }
-                                }
-                            });
+                            startTime = SystemClock.uptimeMillis();
+                            Runnable animationRunnable = createAnimationRunnable(polylinePoints, duration, movingMarker, playButton);
+                            handler.post(animationRunnable);
                         }
                     });
 
+//                    playButton2.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            playButton.setVisibility(View.VISIBLE);
+//                            playButton2.setVisibility(View.GONE);
+//                            isAnimationPaused = true;
+//                        }
+//                    });
+
                     // Add the button to the FrameLayout
                     frameLayout.addView(playButton);
+//                    frameLayout.addView(playButton2);
 
                     if (jsonArray.length() > 0) {
                         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
@@ -698,6 +710,52 @@ public class Timeline extends AppCompatActivity implements
         AppController.getInstance(this).addToRequestQueue(stringRequest);
     }
 
+    private Runnable createAnimationRunnable(final List<LatLng> polylinePoints, final int duration, final Marker movingMarker, final ImageButton playButton) {
+        return new Runnable() {
+            @Override
+            public void run() {
+                // ... (rest of the animation logic using polylinePoints and duration)
+                if (!isAnimationPaused) {
+                    long elapsedTime = SystemClock.uptimeMillis() - startTime;
+                    float fraction = elapsedTime / (float) duration; // Fraction of elapsed time
+                    LatLng newPosition;
+
+                    newPosition = interpolate(fraction, polylinePoints);
+                    movingMarker.setPosition(newPosition);
+
+                    if (fraction < 1.0f) {
+                        float rotationAngle;
+                        rotationAngle = calculateBearing(newPosition, interpolate(fraction + 0.01f, polylinePoints));
+                        movingMarker.setRotation(rotationAngle);
+                        handler.postDelayed(this, 16); // Update marker position and rotation every 16ms
+                    } else {
+                        // Move to the next segment of the polyline
+                        currentPointIndex++;
+                        if (currentPointIndex < polylinePoints.size() - 1) {
+                            LatLng start = polylinePoints.get(currentPointIndex);
+                            LatLng end = polylinePoints.get(currentPointIndex + 1);
+
+                            // Calculate the rotation angle
+                            float rotationAngle = calculateBearing(start, end);
+                            movingMarker.setRotation(rotationAngle);
+                            handler.post(this); // Continue animation
+                        }  else {
+                            // Perform your action when the marker reaches the last coordinate
+                            playButton.setImageResource(R.drawable.baseline_play_circle_48_violet);
+
+                            // Reset animation variables if needed
+                            currentPointIndex = 0;
+                            isAnimationPaused = true;
+                            pausedPosition= null;
+                        }
+                    }
+                } else {
+                    handler.postDelayed(this, 1000); // Delay before checking again
+                }
+            }
+        };
+    }
+
     private float calculateBearing(LatLng startLatLng, LatLng endLatLng) {
         double startLat = Math.toRadians(startLatLng.latitude);
         double startLng = Math.toRadians(startLatLng.longitude);
@@ -725,6 +783,7 @@ public class Timeline extends AppCompatActivity implements
         float remainder = fraction * numberOfPoints - index;
 
         LatLng start = polylinePoints.get(index);
+
         LatLng end = polylinePoints.get(index + 1);
 
         double lat = start.latitude + remainder * (end.latitude - start.latitude);
@@ -732,7 +791,6 @@ public class Timeline extends AppCompatActivity implements
 
         return new LatLng(lat, lng);
     }
-
 
     private void LoadTrip(final String device_id, final String tanggal, final String jam_awal, final String jam_akhir) {
         String ListTrackURL = server.URL2 + "gps/tracking_report2";
