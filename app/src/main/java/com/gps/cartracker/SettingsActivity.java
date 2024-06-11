@@ -13,17 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
 import androidx.core.os.CancellationSignal;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-public class SettingsActivity extends AppCompatActivity
-        implements Preference.OnPreferenceChangeListener {
-    SharedPreferences sharedpreferences;
+public class SettingsActivity extends AppCompatActivity {
     public static final String biometric_lock = "biometric_lock";
-    private static final int REQUEST_CODE_PERMISSION = 123;
-
-    private FingerprintManagerCompat fingerprintManager;
-    private CancellationSignal cancellationSignal;
+    public static final String authority_lock = "authority_lock";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,148 +34,150 @@ public class SettingsActivity extends AppCompatActivity
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        sharedpreferences = getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+        private SharedPreferences sharedpreferences;
+        private SharedPreferences.Editor editor;
+        private FingerprintManagerCompat fingerprintManager;
+        private CancellationSignal cancellationSignal;
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        }
-    }
 
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference.getKey().equals("attachment")) {
-            boolean attachmentEnabled = (boolean) newValue;
-            // Perform the action based on the attachmentEnabled value
-            if (attachmentEnabled) {
-                // Attachment is enabled
-                initFingerprintAuth();
+            sharedpreferences = getActivity().getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
+
+            String user_id = sharedpreferences.getString("user_id", "");
+            PreferenceCategory advanceCategory = findPreference("advance");
+            if (!"8".equals(user_id)) {
+                if (advanceCategory != null) {
+                    advanceCategory.setVisible(false);
+                }
+            }
+
+            Context context = getContext();
+            if (context != null) {
+                editor = sharedpreferences.edit();
+            }
+
+            SwitchPreferenceCompat authorityModePreference = findPreference("authority_mode");
+            if (authorityModePreference != null) {
+                authorityModePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        boolean isOn = (Boolean) newValue;
+                        if (isOn) {
+                            // Action when authority_mode is turned on
+                            performActionOn();
+                        } else {
+                            // Action when authority_mode is turned off
+                            performActionOff();
+                        }
+                        return true; // Save the preference change
+                    }
+                });
+            }
+
+            SwitchPreferenceCompat fingerLockModePreference = findPreference("finger_lock");
+            if (fingerLockModePreference != null) {
+                fingerLockModePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        boolean isOn = (Boolean) newValue;
+                        if (isOn) {
+                            initFingerprintAuth();
+                        } else {
+                            editor.putBoolean(biometric_lock, false);
+                            editor.apply();
+                        }
+                        return true; // Save the preference change
+                    }
+                });
+            }
+        }
+
+        private void performActionOn() {
+            // Add your action when authority_mode is turned on
+            // For example, show a toast
+            Context context = getContext();
+            if (context != null) {
+                Toast.makeText(context, "Authority mode is ON", Toast.LENGTH_SHORT).show();
+            }
+
+            if (editor != null) {
+                editor.putBoolean(authority_lock, true);
+                editor.apply();
+            }
+        }
+
+        private void performActionOff() {
+            // Add your action when authority_mode is turned off
+            // For example, show a toast
+            Context context = getContext();
+            if (context != null) {
+                Toast.makeText(context, "Authority mode is OFF", Toast.LENGTH_SHORT).show();
+            }
+
+            if (editor != null) {
+                editor.putBoolean(authority_lock, false);
+                editor.apply();
+            }
+        }
+
+        private void initFingerprintAuth() {
+            fingerprintManager = FingerprintManagerCompat.from(requireContext());
+
+            // Check if the device has fingerprint hardware and if the user has enrolled fingerprints
+            if (!fingerprintManager.isHardwareDetected()) {
+                // Fingerprint hardware is not available
+                Toast.makeText(getContext(), "Fingerprint hardware not detected", Toast.LENGTH_SHORT).show();
+            } else if (!fingerprintManager.hasEnrolledFingerprints()) {
+                // User has not enrolled any fingerprints
+                Toast.makeText(getContext(), "No fingerprints enrolled", Toast.LENGTH_SHORT).show();
             } else {
-                // Attachment is disabled
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-                editor.putBoolean(biometric_lock, false);
+                // Start fingerprint authentication
+                startFingerprintAuth();
             }
-            return true; // Return true to update the preference value
-        }
-        return false;
-    }
-
-    private void AddBiometric() {
-        FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
-
-        if (fingerprintManager != null && fingerprintManager.isHardwareDetected()) {
-            // Biometric authentication is supported on this device
-            // Proceed with the authentication setup
-            // Create a BiometricPrompt instance
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                BiometricPrompt biometricPrompt = new BiometricPrompt.Builder(SettingsActivity.this)
-                        .setTitle("Biometric Authentication")
-                        .setSubtitle("Use your biometric credentials to login")
-                        .setDescription("Place your finger on the fingerprint sensor")
-                        .setNegativeButton("Cancel", SettingsActivity.this.getMainExecutor(), (dialog, which) -> {
-                            // Biometric authentication was canceled by the user
-                            // Handle the cancellation
-                            Toast.makeText(SettingsActivity.this, "Biometric authentication was canceled by the user", Toast.LENGTH_LONG).show();
-                        })
-                        .build();
-
-                BiometricPrompt.AuthenticationCallback authenticationCallback = new BiometricPrompt.AuthenticationCallback() {
-                    @Override
-                    public void onAuthenticationError(int errorCode, CharSequence errString) {
-                        // Authentication error occurred
-                        // Handle the error, such as showing an error message
-                        Toast.makeText(SettingsActivity.this, "Authentication error occurred", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
-                        // Non-fatal error occurred during authentication
-                        // Handle the help message, such as showing a hint or guidance
-                        Toast.makeText(SettingsActivity.this, "Non-fatal error occurred during authentication", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-                        // Authentication succeeded
-                        // Proceed with the authenticated logic, such as logging in the user
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putBoolean(biometric_lock, true);
-                    }
-
-                    @Override
-                    public void onAuthenticationFailed() {
-                        // Authentication failed
-                        // Handle the failed authentication, such as showing an error message
-                        Toast.makeText(SettingsActivity.this, "Authentication Failed", Toast.LENGTH_LONG).show();
-                    }
-                };
-            }
-        } else {
-            // Biometric authentication is not supported on this device
-            // Handle the scenario accordingly
-            Toast.makeText(SettingsActivity.this, "Biometric authentication is supported on this device", Toast.LENGTH_LONG).show();
         }
 
-    }
+        private void startFingerprintAuth() {
+            cancellationSignal = new CancellationSignal();
+            fingerprintManager.authenticate(null, 0, cancellationSignal,
+                    new FingerprintManagerCompat.AuthenticationCallback() {
+                        @Override
+                        public void onAuthenticationError(int errMsgId, CharSequence errString) {
+                            // Authentication error occurred
+                            Toast.makeText(getContext(),
+                                    "Authentication error: " + errString, Toast.LENGTH_SHORT).show();
+                        }
 
-    private void initFingerprintAuth() {
-        fingerprintManager = FingerprintManagerCompat.from(this);
+                        @Override
+                        public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+                            // Authentication help message
+                            Toast.makeText(getContext(),
+                                    "Authentication help: " + helpString, Toast.LENGTH_SHORT).show();
+                        }
 
-        // Check if the device has fingerprint hardware and if the user has enrolled fingerprints
-        if (!fingerprintManager.isHardwareDetected()) {
-            // Fingerprint hardware is not available
-            Toast.makeText(this, "Fingerprint hardware not detected", Toast.LENGTH_SHORT).show();
-        } else if (!fingerprintManager.hasEnrolledFingerprints()) {
-            // User has not enrolled any fingerprints
-            Toast.makeText(this, "No fingerprints enrolled", Toast.LENGTH_SHORT).show();
-        } else {
-            // Start fingerprint authentication
-            startFingerprintAuth();
-        }
-    }
+                        @Override
+                        public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
+                            // Authentication succeeded
+                            Toast.makeText(getContext(), "Authentication succeeded",
+                                    Toast.LENGTH_SHORT).show();
+                            editor.putBoolean("biometric_lock", true);
+                            editor.apply();
+                            SwitchPreferenceCompat fingerLockModePreference = findPreference("finger_lock");
+                            if (fingerLockModePreference != null) {
+                                fingerLockModePreference.setChecked(true);
+                            }
+                        }
 
-    private void startFingerprintAuth() {
-        cancellationSignal = new CancellationSignal();
-        fingerprintManager.authenticate(null, 0, cancellationSignal,
-                new FingerprintManagerCompat.AuthenticationCallback() {
-                    @Override
-                    public void onAuthenticationError(int errMsgId, CharSequence errString) {
-                        // Authentication error occurred
-                        Toast.makeText(SettingsActivity.this,
-                                "Authentication error: " + errString, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-                        // Authentication help message
-                        Toast.makeText(SettingsActivity.this,
-                                "Authentication help: " + helpString, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
-                        // Authentication succeeded
-                        Toast.makeText(SettingsActivity.this, "Authentication succeeded",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAuthenticationFailed() {
-                        // Authentication failed
-                        Toast.makeText(SettingsActivity.this, "Authentication failed",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }, null);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Cancel fingerprint authentication if it's in progress
-        if (cancellationSignal != null) {
-            cancellationSignal.cancel();
+                        @Override
+                        public void onAuthenticationFailed() {
+                            // Authentication failed
+                            Toast.makeText(getContext(), "Authentication failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }, null);
         }
     }
 }

@@ -15,10 +15,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/action_bar"
+            android:background="@color/primaryTextColor"
             app:popupTheme="@style/Theme.CarTracker.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <include layout="@layout/content_main" />
 
@@ -29,7 +30,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="70dp"
-        app:backgroundTint="@color/orange_400"
+        app:backgroundTint="@color/JotFormYellow"
         app:tint="@color/accent"
         app:srcCompat="@drawable/baseline_my_location_24" />
 
@@ -38,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:backgroundTint="@color/JotFormDark"
+        app:backgroundTint="@color/primaryTextColor"
         app:itemTextColor="@color/white"
         app:menu="@menu/bottom_menu" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Car Tracker</string>
+    <string name="app_name" translatable="true">GPS Tracker</string>
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="nav_header_title" translatable="false">GPS Tracking Car</string>
@@ -13,7 +13,7 @@
     <string name="menu_report" translatable="false">Track Report</string>
     <string name="menu_logout" translatable="false">Logout</string>
     <string name="title_activity_device_position" translatable="false">DevicePosition</string>
-    <string name="app_version" translatable="false">GPSTC V.1.10</string>
+    <string name="app_version" translatable="false">GPSTC V.1.11</string>
     <string-array name="slc_klasifikasi_outlet">
         <item>--Pilih Klasifikasi--</item>
         <item>DIAMOND</item>
@@ -32,4 +32,13 @@
     <string name="attachment_summary_off" translatable="false">Off</string>
     <string name="attachment_summary_on" translatable="false">On</string>
     <string name="attachment_title" translatable="false">Finger Lock</string>
+    <string name="authority" translatable="false">Authority</string>
+    <string name="advance" translatable="false">Advance</string>
+
+    <string name="register">REGISTER</string>
+    <string name="login_email_hint">Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="signup_login_hint">Already have an account? Sign In</string>
+    <string name="login_signup_hint">Don\'t have an account? Sign Up</string>
+    <string name="input_server_hint">Server</string>
 </resources>

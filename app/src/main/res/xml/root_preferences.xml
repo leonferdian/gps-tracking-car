@@ -25,11 +25,19 @@
 
         <SwitchPreferenceCompat
             app:dependency="sync"
-            app:key="attachment"
+            app:key="finger_lock"
             app:summaryOff="@string/attachment_summary_off"
             app:summaryOn="@string/attachment_summary_on"
             app:title="@string/attachment_title" />
-
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:title="@string/advance"
+        app:key="advance">
+        <SwitchPreferenceCompat
+            app:key="authority_mode"
+            app:summaryOff="@string/attachment_summary_off"
+            app:summaryOn="@string/attachment_summary_on"
+            app:title="@string/authority" />
     </PreferenceCategory>
 
 </PreferenceScreen>

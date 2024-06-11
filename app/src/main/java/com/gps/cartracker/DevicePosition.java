@@ -660,7 +660,7 @@ public class DevicePosition extends AppCompatActivity implements
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //window.setStatusBarColor(Color.TRANSPARENT);
-            window.setStatusBarColor(getResources().getColor(R.color.action_bar));
+            window.setStatusBarColor(getResources().getColor(R.color.primaryTextColor));
         }
     }
 }

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/loginCard"
+    app:cardCornerRadius="@dimen/loginCardRadius"
+    android:elevation="5dp"
+    android:layout_gravity="center"
+    android:layout_marginTop="@dimen/loginViewsMargin"
+    android:layout_marginBottom="@dimen/loginViewsMargin"
+    android:background="@color/whiteCardColor">
+
+    <LinearLayout
+        style="@style/linearParent"
+        android:layout_gravity="center"
+        android:background="@color/whiteCardColor"
+        android:padding="@dimen/loginViewsMargin">
+
+        <TextView
+            style="@style/headerTextPrimary"
+            android:text="Login"
+            android:layout_marginTop="@dimen/loginViewsMargin"/>
+
+        <TextView
+            android:id="@+id/label1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="-15dp"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="12sp"
+            android:text="Server" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputServer"
+            style="@style/parent"
+            android:layout_marginTop="@dimen/loginViewsMargin">
+            <EditText
+                android:id="@+id/txt_server"
+                style="@style/modifiedEditText"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:textColor="@color/black"/>
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="-3dp"
+                android:layout_below="@+id/Login"
+                android:background="@color/primaryTextColor"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/label2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="-15dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="12sp"
+            android:text="Email" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputEmail"
+            style="@style/parent"
+            android:layout_marginTop="@dimen/loginViewsMargin">
+            <EditText
+                android:id="@+id/txt_username"
+                style="@style/modifiedEditText"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:textColor="@color/black"/>
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="-3dp"
+                android:layout_below="@+id/Login"
+                android:background="@color/primaryTextColor"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/label3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="-15dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="12sp"
+            android:text="Password" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputPassword"
+            style="@style/parent"
+            android:layout_marginTop="@dimen/loginViewsMargin">
+            <EditText
+                android:id="@+id/txt_password"
+                style="@style/modifiedEditText"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:inputType="textPassword"/>
+            <View
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="-3dp"
+                android:layout_below="@+id/Login"
+                android:background="@color/primaryTextColor"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <TextView-->
+<!--            style="@style/viewParent"-->
+<!--            android:text="Forgot Password?"-->
+<!--            android:textColor="@color/primaryTextColor"-->
+<!--            android:textSize="@dimen/newsMoreTextSize"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:onClick="viewForgotPAssword"-->
+<!--            android:layout_marginTop="10dp"/>-->
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/blue_300"
+            android:textColor="@color/accent"
+            android:width="182dp"
+            android:height="70dp"
+            android:text="Login"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/loginViewsMargin"/>
+
+
+        <!--        <TextView-->
+<!--            style="@style/parent"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@color/primaryTextColor"-->
+<!--            android:text="@string/login_signup_hint"-->
+<!--            android:onClick="viewRegisterClicked"-->
+<!--            android:layout_marginTop="@dimen/loginViewsMargin"/>-->
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

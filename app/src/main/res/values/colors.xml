@@ -295,4 +295,12 @@
     <color name="red_A200">#FF5252</color>
     <color name="red_A400">#FF1744</color>
     <color name="red_A700">#D50000</color>
+
+    <!--colors for modern ui-->
+    <color name="whiteTextColor">#fff</color>
+    <color name="primaryTextColor">#00a5ff</color>
+    <color name="loginBkColor">#f0f0f0</color>
+
+    <!--colros for card-->
+    <color name="whiteCardColor">#fff</color>
 </resources>

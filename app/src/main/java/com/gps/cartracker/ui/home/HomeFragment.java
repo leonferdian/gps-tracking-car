@@ -17,13 +17,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.gps.cartracker.DevicePosition;
 import com.gps.cartracker.LoginActivity;
 import com.gps.cartracker.R;
+import com.gps.cartracker.SettingsActivity;
 import com.gps.cartracker.databinding.FragmentHomeBinding;
 import com.gps.cartracker.util.AppController;
 import com.gps.cartracker.util.server;
@@ -41,14 +44,18 @@ import java.util.concurrent.TimeUnit;
 
 public class HomeFragment extends Fragment {
     LinearLayout linearLayout;
+    String url;
     String ListTrackURL = server.URL2 + "gps/list_device_user";
+    String ListTrackURL2 = server.URL2 + "gps/list_device";
     private static final String TAG = HomeFragment.class.getSimpleName();
-    public static final String device_id = "device_id";
     private FragmentHomeBinding binding;
     private Handler handler;
     private Runnable updateRunnable;
     private static final long UPDATE_INTERVAL = 120 * 1000; // 2 minute in milliseconds
-    ConnectivityManager conMgr;
+    int initialTimeoutMs = 10000; // Initial timeout in milliseconds
+    int maxNumRetries = 3; // Maximum number of retries
+    float backoffMultiplier = 1.5f; // Backoff multiplier for exponential backoff
+    RetryPolicy retryPolicy = new DefaultRetryPolicy(initialTimeoutMs, maxNumRetries, backoffMultiplier);
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -71,7 +78,15 @@ public class HomeFragment extends Fragment {
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
         String user_id = sharedPreferences.getString("user_id", "");
-        list_car(user_id);
+        boolean authority_lock = sharedPreferences.getBoolean(SettingsActivity.authority_lock, false);
+
+        if (authority_lock) {
+            url = ListTrackURL2;
+        } else {
+            url = ListTrackURL;
+        }
+
+        list_car(user_id, url);
 //        final TextView textView = binding.textHome;
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
@@ -96,24 +111,24 @@ public class HomeFragment extends Fragment {
         linearLayout.removeAllViews();
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
         String user_id = sharedPreferences.getString("user_id", "");
-        list_car(user_id);
+        list_car(user_id, url);
     }
 
-    private void list_car(final String user_id) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ListTrackURL, new Response.Listener<String>() {
+    private void list_car(final String user_id, final String url) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.e(TAG, "Data Response: " + response.toString());
+                Log.e(TAG, "Data Response: " + response);
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String id = jsonObject.getString("id");
-                        String name = jsonObject.getString("name");
-                        String status = jsonObject.getString("status");
-                        String lastupdate = jsonObject.getString("lastupdate");
-                        String category = jsonObject.getString("category");
-                        String positionid = jsonObject.getString("positionid");
+
+                        String id = jsonObject.optString("id", "N/A");
+                        String name = jsonObject.optString("name", "Unknown");
+                        String status = jsonObject.optString("status", "Unknown");
+                        String lastupdate = jsonObject.optString("lastupdate", "null");
+                        String category = jsonObject.optString("category", "unknown");
 
                         int resourceId;
                         switch (category) {
@@ -127,7 +142,6 @@ public class HomeFragment extends Fragment {
                                 resourceId = R.mipmap.truck;
                                 break;
                             default:
-                                // Handle the default case or set a fallback BitmapDescriptor
                                 resourceId = R.mipmap.motor2;
                                 break;
                         }
@@ -139,27 +153,16 @@ public class HomeFragment extends Fragment {
 
                         if (!lastupdate.equals("null")) {
                             try {
-
-                                // Parse the datetime string into a Date object
                                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 Date date = format.parse(lastupdate);
-
-                                // Calculate the time difference in milliseconds
                                 long diff = now.getTime() - date.getTime();
-
-                                // Add 7 hours in milliseconds to the diff variable
-                                // diff -= 7 * 60 * 60 * 1000;
-
-                                // Calculate the days, hours, and minutes
                                 days = TimeUnit.MILLISECONDS.toDays(diff);
                                 hours = TimeUnit.MILLISECONDS.toHours(diff) % 24;
                                 minutes = TimeUnit.MILLISECONDS.toMinutes(diff) % 60;
 
-                                // Now you have the day, hour, and minute values
                                 System.out.println("Days: " + days);
                                 System.out.println("Hours: " + hours);
                                 System.out.println("Minutes: " + minutes);
-
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -180,7 +183,6 @@ public class HomeFragment extends Fragment {
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                // TODO Auto-generated method stub
                                 Intent intent = new Intent(getActivity(), DevicePosition.class);
                                 intent.putExtra("device_id", id);
                                 startActivity(intent);
@@ -189,7 +191,7 @@ public class HomeFragment extends Fragment {
                         linearLayout.addView(button);
                     }
                 } catch (JSONException e) {
-//                    e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
@@ -206,19 +208,11 @@ public class HomeFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-//                params.put("_token", csrfToken);
                 params.put("userid", user_id);
                 return params;
             }
-
-//            @Override
-//            public Map<String, String> getHeaders() {
-//                Map<String, String> headers = new HashMap<>();
-//                headers.put("X-CSRF-Token", csrfToken);
-//                return headers;
-//            }
         };
-
+        stringRequest.setRetryPolicy(retryPolicy);
         AppController.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 

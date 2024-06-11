@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -219,7 +220,7 @@ public class LoginActivity extends AppCompatActivity {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //window.setStatusBarColor(Color.TRANSPARENT);
-            window.setStatusBarColor(getResources().getColor(R.color.cyan_100));
+            window.setStatusBarColor(getResources().getColor(R.color.primaryTextColor));
         }
     }
 

@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_main_ms"
         android:minHeight="?attr/actionBarSize"
-        android:background="@color/action_bar"
+        android:background="@color/primaryTextColor"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"

@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.gps.cartracker.LoginActivity;
 import com.gps.cartracker.R;
+import com.gps.cartracker.SettingsActivity;
 import com.gps.cartracker.Timeline;
 import com.gps.cartracker.databinding.FragmentReportBinding;
 import com.gps.cartracker.util.AppController;
@@ -42,6 +43,8 @@ import java.util.concurrent.TimeUnit;
 public class ReportFragment extends Fragment {
     LinearLayout linearLayout;
     String ListTrackURL = server.URL2 + "gps/list_device_user";
+    String ListTrackURL2 = server.URL2 + "gps/list_device";
+    String url;
     public static final String device_id = "device_id";
     private static final String TAG = ReportFragment.class.getSimpleName();
     private FragmentReportBinding binding;
@@ -69,7 +72,15 @@ public class ReportFragment extends Fragment {
 
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
         String user_id = sharedPreferences.getString("user_id", "");
-        list_car(user_id);
+        boolean authority_lock = sharedPreferences.getBoolean(SettingsActivity.authority_lock, false);
+
+        if (authority_lock) {
+            url = ListTrackURL2;
+        } else {
+            url = ListTrackURL;
+        }
+
+        list_car(user_id, url);
         return root;
     }
 
@@ -92,11 +103,11 @@ public class ReportFragment extends Fragment {
         linearLayout.removeAllViews();
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
         String user_id = sharedPreferences.getString("user_id", "");
-        list_car(user_id);
+        list_car(user_id, url);
     }
 
-    private void list_car(final String user_id) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ListTrackURL, new Response.Listener<String>() {
+    private void list_car(final String user_id, final String url) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.e(TAG, "Data Response: " + response.toString());

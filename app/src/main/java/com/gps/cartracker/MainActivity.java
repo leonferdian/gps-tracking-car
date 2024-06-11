@@ -255,8 +255,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
                         // Authentication succeeded
-                        Toast.makeText(MainActivity.this, "Authentication succeeded",
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, "Authentication succeeded",
+//                                Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //window.setStatusBarColor(Color.TRANSPARENT);
-            window.setStatusBarColor(getResources().getColor(R.color.action_bar));
+            window.setStatusBarColor(getResources().getColor(R.color.primaryTextColor));
         }
     }
 

@@ -48,7 +48,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ListDevicePosition extends AppCompatActivity {
-
+    private String auth;
     private GoogleMap mMap;
     private static final String TAG = ListDevicePosition.class.getSimpleName();
     private static final long UPDATE_INTERVAL = 60 * 1000; // 1 minute in milliseconds
@@ -72,6 +72,12 @@ public class ListDevicePosition extends AppCompatActivity {
 
         SharedPreferences sharedpreferences = getSharedPreferences(LoginActivity.my_shared_preferences, Context.MODE_PRIVATE);
         String user_id = sharedpreferences.getString("user_id", "");
+        boolean authority_lock = sharedpreferences.getBoolean(SettingsActivity.authority_lock, false);
+        if (authority_lock) {
+            auth = "on";
+        } else {
+            auth = "off";
+        }
 
         // Initialize the handler and runnable
         handler = new Handler();
@@ -250,6 +256,7 @@ public class ListDevicePosition extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
 //                params.put("_token", csrfToken);
                 params.put("userid", user_id);
+                params.put("auth", auth);
                 return params;
             }
 
@@ -275,7 +282,7 @@ public class ListDevicePosition extends AppCompatActivity {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             //window.setStatusBarColor(Color.TRANSPARENT);
-            window.setStatusBarColor(getResources().getColor(R.color.action_bar));
+            window.setStatusBarColor(getResources().getColor(R.color.primaryTextColor));
         }
     }
 }
