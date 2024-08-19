@@ -132,4 +132,16 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <!-- Style for the blue sky button -->
+    <style name="BlueSkyButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/blue_sky_button</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <!-- Style for the red button -->
+    <style name="RedButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/red_button</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

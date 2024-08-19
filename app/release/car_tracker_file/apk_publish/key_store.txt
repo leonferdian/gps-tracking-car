@@ -1,0 +1,6 @@
+key= car_tracker
+password= it.454545
+
+keytool -list -v -keystore E:/Android/car_tracker_file/apk_publish/key_path/car_tracker.jks -alias car_tracker
+
+keytool -exportcert -keystore E:/Android/car_tracker_file/apk_publish/key_path/car_tracker.jks -alias car_tracker -rfc -file E:/Android/car_tracker_file/apk_publish/certificate.pem

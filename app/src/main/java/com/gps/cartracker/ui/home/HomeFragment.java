@@ -1,9 +1,12 @@
 package com.gps.cartracker.ui.home;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -11,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -47,6 +52,7 @@ public class HomeFragment extends Fragment {
     String url;
     String ListTrackURL = server.URL2 + "gps/list_device_user";
     String ListTrackURL2 = server.URL2 + "gps/list_device";
+    String url_version = server.URL2 + "gps/check_version";
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding binding;
     private Handler handler;
@@ -87,6 +93,7 @@ public class HomeFragment extends Fragment {
         }
 
         list_car(user_id, url);
+        check_version();
 //        final TextView textView = binding.textHome;
 //        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
@@ -209,6 +216,83 @@ public class HomeFragment extends Fragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put("userid", user_id);
+                return params;
+            }
+        };
+        stringRequest.setRetryPolicy(retryPolicy);
+        AppController.getInstance(getContext()).addToRequestQueue(stringRequest);
+    }
+
+    private void check_version() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url_version, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.e(TAG, "Data Response: " + response);
+                try {
+                    JSONArray jsonArray = new JSONArray(response);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        String UpdateVersion = jsonObject.optString("version", "0");
+                        String InstalledVersion = getString(R.string.name_version);
+
+                        if (!InstalledVersion.equals(UpdateVersion)) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Update Available");
+                            builder.setMessage("A new version of the app is available. Tap to update.");
+
+                            builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Get the entered name from the EditText
+                                    String url = "https://play.google.com/store/apps/details?id=com.gps.cartracker";
+
+                                    // Create an intent to open the URL
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    startActivity(intent);
+                                }
+                            });
+
+                            builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Handle the cancellation or dismiss the dialog
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            // Get the buttons and apply styles
+                            Button updateButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                            Button closeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+
+                            // Apply custom styles
+                            updateButton.setTextColor(Color.WHITE);
+                            updateButton.setBackgroundResource(R.drawable.blue_sky_button);
+                            closeButton.setTextColor(Color.WHITE);
+                            closeButton.setBackgroundResource(R.drawable.red_button);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.getMessage() != null) {
+                    Log.e(TAG, "Error: " + error.getMessage());
+                    Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), "Connection error!", Toast.LENGTH_LONG).show();
+                }
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+//                params.put("userid", user_id);
                 return params;
             }
         };

@@ -15,6 +15,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -596,6 +598,7 @@ public class Timeline extends AppCompatActivity implements
                             .title(finalNama_kendaraan);
 
                     final Marker movingMarker = mMap.addMarker(markerOptions);
+
                     playButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

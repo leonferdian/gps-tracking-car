@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="-15dp"
+            android:layout_marginBottom="-20dp"
             android:textColor="@color/primaryTextColor"
             android:textSize="12sp"
             android:text="Server" />
@@ -39,6 +39,7 @@
             <EditText
                 android:id="@+id/txt_server"
                 style="@style/modifiedEditText"
+                android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:textColor="@color/black"/>
@@ -57,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginBottom="-15dp"
+            android:layout_marginBottom="-20dp"
             android:layout_marginTop="5dp"
             android:textColor="@color/primaryTextColor"
             android:textSize="12sp"
@@ -70,6 +71,7 @@
             <EditText
                 android:id="@+id/txt_username"
                 style="@style/modifiedEditText"
+                android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:textColor="@color/black"/>
@@ -87,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginBottom="-15dp"
+            android:layout_marginBottom="-20dp"
             android:layout_marginTop="5dp"
             android:textColor="@color/primaryTextColor"
             android:textSize="12sp"
@@ -100,6 +102,7 @@
             <EditText
                 android:id="@+id/txt_password"
                 style="@style/modifiedEditText"
+                android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:inputType="textPassword"/>

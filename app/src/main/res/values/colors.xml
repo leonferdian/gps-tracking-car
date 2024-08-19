@@ -303,4 +303,7 @@
 
     <!--colros for card-->
     <color name="whiteCardColor">#fff</color>
+
+    <color name="blue_sky">#87CEEB</color>
+    <color name="red">#FF0000</color>
 </resources>
